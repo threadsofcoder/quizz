@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Humanities Career Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    font-family: Georgia, serif;
+    background: #faf9f7;
+    color: #1f1f1f;
+    margin: 0;
+    padding: 24px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: auto;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 6px;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: 22px;
+    margin-top: 32px;
+  }
+
+  p {
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .question {
+    margin-top: 32px;
+  }
+
+  .option {
+    display: block;
+    margin: 12px 0;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .option:hover {
+    background: #f4f3f1;
+  }
+
+  button {
+    margin-top: 32px;
+    padding: 12px 20px;
+    background: #1f1f1f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .result {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #eee;
+  }
+
+  .profile-title {
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+
+  .roles {
+    font-style: italic;
+  }
+
+  .brand-note {
+    margin-top: 32px;
+    font-size: 15px;
+    color: #444;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div id="intro">
+    <h1>You studied Humanities.</h1>
+    <p>
+      You didn’t “end up” here by accident.  
+      You trained your mind to think, interpret, connect and question.
+    </p>
+    <p>
+      Answer 5 short questions and we’ll suggest the <strong>kind</strong> of work your skills are best suited to —
+      beyond job titles.
+    </p>
+    <button onclick="startQuiz()">Start</button>
+  </div>
+
+  <div id="quiz" class="hidden"></div>
+
+  <div id="result" class="hidden result"></div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q: "What gives you the most satisfaction?",
+    options: {
+      A: "Making complex ideas clear to others",
+      B: "Understanding people and motivations",
+      C: "Creating something meaningful or beautiful",
+      D: "Improving how things work behind the scenes"
+    }
+  },
+  {
+    q: "In group work, you’re usually the one who…",
+    options: {
+      A: "Structures the argument or narrative",
+      B: "Reads the room and smooths tensions",
+      C: "Brings originality or taste",
+      D: "Organises, refines, and follows through"
+    }
+  },
+  {
+    q: "You’d rather be praised for…",
+    options: {
+      A: "Your clarity and intelligence",
+      B: "Your emotional intelligence",
+      C: "Your vision and creativity",
+      D: "Your reliability and judgment"
+    }
+  },
+  {
+    q: "Which work environment sounds best?",
+    options: {
+      A: "Writing, presenting, or explaining",
+      B: "People-focused, collaborative settings",
+      C: "Conceptual, aesthetic, or cultural spaces",
+      D: "Operational, strategic, or analytical teams"
+    }
+  },
+  {
+    q: "Pick the sentence that feels most like you:",
+    options: {
+      A: "I like making sense of messy information.",
+      B: "I care deeply about people and outcomes.",
+      C: "I have strong taste and ideas.",
+      D: "I notice what others overlook."
+    }
+  }
+];
+
+let current = 0;
+let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+function startQuiz() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  let html = `<div class="question"><h2>${q.q}</h2>`;
+  for (let key in q.options) {
+    html += `<div class="option" onclick="answer('${key}')">${q.options[key]}</div>`;
+  }
+  html += `</div>`;
+  document.getElementById("quiz").innerHTML = html;
+}
+
+function answer(choice) {
+  scores[choice]++;
+  current++;
+  if (current < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("quiz").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  const top = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+  const profiles = {
+    A: {
+      title: "The Translator",
+      text: "You’re good at turning complexity into clarity.",
+      roles: "Strategy, communications, research, consulting, narrative roles",
+      note: "Humanities didn’t make you vague. It made you precise."
+    },
+    B: {
+      title: "The Connector",
+      text: "You’re good at understanding people and navigating nuance.",
+      roles: "Community, partnerships, people ops, customer experience",
+      note: "Soft skills are only called soft because they’re rare."
+    },
+    C: {
+      title: "The Tastemaker",
+      text: "You’re good at sense-making through culture, aesthetics, and meaning.",
+      roles: "Brand, fashion, editorial, creative direction, UX writing",
+      note: "Taste is a form of intelligence."
+    },
+    D: {
+      title: "The Architect",
+      text: "You’re good at designing systems and making things work.",
+      roles: "Operations, product, project or programme management",
+      note: "Structure is creative too."
+    }
+  };
+
+  const p = profiles[top];
+
+  document.getElementById("result").innerHTML = `
+    <div class="profile-title">${p.title}</div>
+    <p>${p.text}</p>
+    <p class="roles">${p.roles}</p>
+    <p><strong>${p.note}</strong></p>
+
+    <div class="brand-note">
+      Whatever path you’re on — you deserve to show up as yourself, not shrink into a role that doesn’t fit.<br><br>
+      <strong>Threads of Independence</strong> is built for women who think deeply and move independently — at work and beyond.
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
